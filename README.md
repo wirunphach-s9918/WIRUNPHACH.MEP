@@ -3,7 +3,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แอปเช็คชื่อนักเรียน</title>
-  <script src="/_sdk/data_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -47,22 +46,6 @@
         opacity: 1;
       }
     }
-    
-    .loading-spinner {
-      border: 3px solid rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      border-top: 3px solid white;
-      width: 20px;
-      height: 20px;
-      animation: spin 1s linear infinite;
-      display: inline-block;
-      margin-left: 8px;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
 
     .modal-overlay {
       position: fixed;
@@ -88,6 +71,7 @@
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body>
@@ -106,7 +90,7 @@
        </svg>
       </div>
       <h1 id="app-title" class="font-bold mb-2" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.125rem;">ระบบเช็คการมาเรียน นักเรียน MEP โรงเรียนประตูชัย</h1>
-      <p class="font-bold mb-6" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.125rem;">สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1</p>
+      <p class="font-bold mb-6" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.125rem;">สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1 </p>
       <div class="inline-block p-4 bg-pink-50 rounded-2xl mb-8">
        <p class="text-pink-600 font-medium">📚 กรุณาเลือกห้องเรียนเพื่อเริ่มเช็คชื่อ</p>
       </div><!-- Classroom Selection Grid -->
@@ -161,7 +145,7 @@
         <div>
          <h3 class="text-lg font-bold text-gray-800 mb-1">🎯 โหลดรายชื่อเริ่มต้น ป.1/5</h3>
          <p class="text-sm text-gray-600">เพิ่มนักเรียน 10 คนให้อัตโนมัติ (กดเพียงครั้งเดียว)</p>
-        </div><button id="load-default-btn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"> โหลดรายชื่อ </button>
+        </div><button id="load-default-btn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl"> โหลดรายชื่อ </button>
        </div>
       </div><!-- Add Student Form -->
       <div class="bg-purple-50 rounded-xl p-4 mb-6">
@@ -169,7 +153,7 @@
        <form id="add-student-form" class="flex flex-wrap gap-3">
         <div class="flex-1 min-w-[200px]"><label for="student-name-input" class="block text-sm font-medium text-gray-700 mb-1">ชื่อนักเรียน</label> <input type="text" id="student-name-input" placeholder="กรอกชื่อนักเรียน" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
         </div>
-        <div class="flex items-end"><button type="submit" id="add-student-btn" class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"> เพิ่มนักเรียน </button>
+        <div class="flex items-end"><button type="submit" id="add-student-btn" class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"> เพิ่มนักเรียน </button>
         </div>
        </form>
       </div><!-- Date Filter -->
@@ -178,7 +162,7 @@
       <div id="attendance-container">
        <h3 class="text-lg font-bold text-gray-800 mb-3">รายชื่อนักเรียน</h3>
        <div id="student-list" class="space-y-2">
-        <p class="text-gray-500 text-center py-8">กำลังโหลดข้อมูล...</p>
+        <p class="text-gray-500 text-center py-8">ยังไม่มีนักเรียนในห้องเรียนนี้</p>
        </div>
       </div><!-- Summary -->
       <div class="mt-6 p-4 bg-blue-50 rounded-xl">
@@ -208,11 +192,13 @@
      <p class="text-white text-opacity-60 text-sm mt-2">พัฒนาโดย นางวิรัลพัชษ์ สว่างเดือน</p>
     </footer>
    </div>
-  </div><!-- Limit Warning Modal -->
-  <div id="limit-modal" class="modal-overlay" style="display: none;">
+  </div><!-- Confirm Delete Modal -->
+  <div id="confirm-modal" class="modal-overlay" style="display: none;">
    <div class="modal-content">
-    <h2 class="text-xl font-bold text-red-600 mb-3">⚠️ เกินขด้จำกัด</h2>
-    <p class="text-gray-700 mb-4">ระบบสามารถเก็บข้อมูลได้สูงสุด 999 รายการ กรุณาลบข้อมูลเก่าก่อนเพิ่มใหม่</p><button id="close-limit-modal" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"> ปิด </button>
+    <h2 class="text-xl font-bold text-gray-800 mb-3">ยืนยันการลบ</h2>
+    <p class="text-gray-700 mb-4">คุณต้องการลบ <span id="delete-student-name" class="font-bold"></span> ออกจากระบบใช่หรือไม่?</p>
+    <div class="flex gap-3"><button id="confirm-delete-btn" class="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"> ยืนยันลบ </button> <button id="cancel-delete-btn" class="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-400"> ยกเลิก </button>
+    </div>
    </div>
   </div>
   <script>
@@ -238,7 +224,29 @@
     let allRecords = [];
     let currentClassroom = "ป.1/5";
     let currentDate = new Date().toISOString().split('T')[0];
-    let isLoading = false;
+    let studentToDelete = null;
+
+    // LocalStorage functions
+    function saveToLocalStorage() {
+      localStorage.setItem('attendanceRecords', JSON.stringify(allRecords));
+    }
+
+    function loadFromLocalStorage() {
+      const data = localStorage.getItem('attendanceRecords');
+      if (data) {
+        try {
+          allRecords = JSON.parse(data);
+        } catch (e) {
+          allRecords = [];
+        }
+      } else {
+        allRecords = [];
+      }
+    }
+
+    function generateId() {
+      return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+    }
 
     // Helper function to convert date to Buddhist Era display
     function toBuddhistYear(dateStr) {
@@ -258,29 +266,9 @@
       }
     }
 
-    // Data SDK Handler
-    const dataHandler = {
-      onDataChanged(data) {
-        allRecords = data;
-        renderStudentList();
-        updateSummary();
-      }
-    };
-
     // Initialize app
-    async function initializeApp() {
-      if (!window.dataSdk) {
-        showToast('ไม่สามารถเชื่อมต่อระบบได้', 'error');
-        return;
-      }
-
-      const initResult = await window.dataSdk.init(dataHandler);
-      
-      if (!initResult.isOk) {
-        showToast('ไม่สามารถเริ่มต้นระบบได้', 'error');
-        return;
-      }
-
+    function initializeApp() {
+      loadFromLocalStorage();
       setupEventListeners();
       document.getElementById('date-filter').value = currentDate;
       updateDateDisplay();
@@ -302,27 +290,18 @@
       });
 
       // Load default students button
-      document.getElementById('load-default-btn').addEventListener('click', async () => {
-        await loadDefaultStudents();
+      document.getElementById('load-default-btn').addEventListener('click', () => {
+        loadDefaultStudents();
       });
 
       // Add student form
-      document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+      document.getElementById('add-student-form').addEventListener('submit', (e) => {
         e.preventDefault();
         
-        if (isLoading) return;
-
         const nameInput = document.getElementById('student-name-input');
-        const addBtn = document.getElementById('add-student-btn');
         const studentName = nameInput.value.trim();
         
         if (!studentName) return;
-
-        // Check limit before adding
-        if (allRecords.length >= 999) {
-          showLimitModal();
-          return;
-        }
 
         // Check if student already exists in this classroom
         const existingStudent = allRecords.find(r => 
@@ -334,14 +313,9 @@
           return;
         }
 
-        // Show loading state
-        isLoading = true;
-        addBtn.disabled = true;
-        const originalText = addBtn.textContent;
-        addBtn.innerHTML = 'กำลังเพิ่ม...<span class="loading-spinner"></span>';
-
         // Add new student
         const newRecord = {
+          id: generateId(),
           student_name: studentName,
           classroom: currentClassroom,
           date: currentDate,
@@ -349,19 +323,13 @@
           created_at: new Date().toISOString()
         };
 
-        const result = await window.dataSdk.create(newRecord);
-
-        // Reset loading state
-        isLoading = false;
-        addBtn.disabled = false;
-        addBtn.textContent = originalText;
-
-        if (result.isOk) {
-          nameInput.value = '';
-          showToast('เพิ่มนักเรียนสำเร็จ', 'success');
-        } else {
-          showToast('ไม่สามารถเพิ่มนักเรียนได้', 'error');
-        }
+        allRecords.push(newRecord);
+        saveToLocalStorage();
+        
+        nameInput.value = '';
+        showToast('เพิ่มนักเรียนสำเร็จ', 'success');
+        renderStudentList();
+        updateSummary();
       });
 
       // Date filter
@@ -380,17 +348,31 @@
         updateDateDisplay();
       });
 
-      // Limit modal close
-      document.getElementById('close-limit-modal').addEventListener('click', () => {
-        document.getElementById('limit-modal').style.display = 'none';
+      // Confirm delete modal
+      document.getElementById('confirm-delete-btn').addEventListener('click', () => {
+        if (studentToDelete) {
+          // Find all records of this student in this classroom
+          allRecords = allRecords.filter(r => 
+            !(r.classroom === currentClassroom && r.student_name === studentToDelete)
+          );
+          
+          saveToLocalStorage();
+          showToast('ลบนักเรียนสำเร็จ', 'success');
+          renderStudentList();
+          updateSummary();
+        }
+        
+        document.getElementById('confirm-modal').style.display = 'none';
+        studentToDelete = null;
+      });
+
+      document.getElementById('cancel-delete-btn').addEventListener('click', () => {
+        document.getElementById('confirm-modal').style.display = 'none';
+        studentToDelete = null;
       });
     }
 
-    async function loadDefaultStudents() {
-      if (isLoading) return;
-
-      const loadBtn = document.getElementById('load-default-btn');
-      
+    function loadDefaultStudents() {
       // Check if students already exist
       const existingStudents = allRecords.filter(r => r.classroom === currentClassroom);
       const existingNames = new Set(existingStudents.map(r => r.student_name));
@@ -402,51 +384,22 @@
         return;
       }
 
-      // Check limit
-      if (allRecords.length + studentsToAdd.length > 999) {
-        showLimitModal();
-        return;
-      }
-
-      // Show loading state
-      isLoading = true;
-      loadBtn.disabled = true;
-      const originalText = loadBtn.textContent;
-      loadBtn.innerHTML = 'กำลังโหลด...<span class="loading-spinner"></span>';
-
-      let successCount = 0;
-      let errorCount = 0;
-
-      for (const studentName of studentsToAdd) {
+      studentsToAdd.forEach(studentName => {
         const newRecord = {
+          id: generateId(),
           student_name: studentName,
           classroom: currentClassroom,
           date: currentDate,
           status: STATUS_PRESENT,
           created_at: new Date().toISOString()
         };
+        allRecords.push(newRecord);
+      });
 
-        const result = await window.dataSdk.create(newRecord);
-        
-        if (result.isOk) {
-          successCount++;
-        } else {
-          errorCount++;
-        }
-      }
-
-      // Reset loading state
-      isLoading = false;
-      loadBtn.disabled = false;
-      loadBtn.textContent = originalText;
-
-      if (successCount > 0) {
-        showToast(`โหลดรายชื่อสำเร็จ ${successCount} คน`, 'success');
-      }
-      
-      if (errorCount > 0) {
-        showToast(`เกิดข้อผิดพลาด ${errorCount} รายการ`, 'error');
-      }
+      saveToLocalStorage();
+      showToast(`โหลดรายชื่อสำเร็จ ${studentsToAdd.length} คน`, 'success');
+      renderStudentList();
+      updateSummary();
     }
 
     function showWelcomeScreen() {
@@ -492,14 +445,8 @@
         return;
       }
 
-      // Update existing elements or create new ones
-      const existingElements = new Map();
-      Array.from(container.children).forEach(el => {
-        if (el.dataset.studentName) {
-          existingElements.set(el.dataset.studentName, el);
-        }
-      });
-
+      container.innerHTML = '';
+      
       uniqueStudents.forEach(studentName => {
         const todayRecord = allRecords.find(r => 
           r.classroom === currentClassroom && 
@@ -507,33 +454,17 @@
           r.date === currentDate
         );
 
-        if (existingElements.has(studentName)) {
-          updateStudentElement(existingElements.get(studentName), studentName, todayRecord);
-          existingElements.delete(studentName);
-        } else {
-          container.appendChild(createStudentElement(studentName, todayRecord));
-        }
+        const div = createStudentElement(studentName, todayRecord);
+        container.appendChild(div);
       });
-
-      // Remove elements that no longer exist
-      existingElements.forEach(el => el.remove());
     }
 
     function createStudentElement(studentName, record) {
-      const div = document.createElement('div');
-      div.dataset.studentName = studentName;
-      if (record) {
-        div.dataset.recordId = record.__backendId;
-      }
-      div.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors';
-      
-      updateStudentElement(div, studentName, record);
-      return div;
-    }
-
-    function updateStudentElement(element, studentName, record) {
       const currentStatus = record ? record.status : STATUS_PRESENT;
 
+      const div = document.createElement('div');
+      div.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors';
+      
       const nameDiv = document.createElement('div');
       nameDiv.className = 'flex-1';
       nameDiv.innerHTML = `
@@ -544,149 +475,68 @@
       const buttonsDiv = document.createElement('div');
       buttonsDiv.className = 'flex items-center gap-2';
 
-      // Create Present button
-      const presentBtn = document.createElement('button');
-      presentBtn.className = 'status-btn px-3 py-1 rounded-lg text-white text-sm font-medium bg-green-500';
-      presentBtn.textContent = 'มาเรียน';
-      presentBtn.dataset.status = STATUS_PRESENT;
-      if (currentStatus === STATUS_PRESENT) {
-        presentBtn.style.opacity = '1';
-        presentBtn.style.transform = 'scale(1.05)';
-      } else {
-        presentBtn.style.opacity = '0.5';
-      }
+      // Create status buttons
+      const statuses = [
+        { value: STATUS_PRESENT, label: 'มาเรียน', color: 'bg-green-500' },
+        { value: STATUS_LEAVE, label: 'ลา', color: 'bg-yellow-500' },
+        { value: STATUS_SICK, label: 'ป่วย', color: 'bg-red-500' }
+      ];
 
-      // Create Leave button
-      const leaveBtn = document.createElement('button');
-      leaveBtn.className = 'status-btn px-3 py-1 rounded-lg text-white text-sm font-medium bg-yellow-500';
-      leaveBtn.textContent = 'ลา';
-      leaveBtn.dataset.status = STATUS_LEAVE;
-      if (currentStatus === STATUS_LEAVE) {
-        leaveBtn.style.opacity = '1';
-        leaveBtn.style.transform = 'scale(1.05)';
-      } else {
-        leaveBtn.style.opacity = '0.5';
-      }
+      statuses.forEach(({ value, label, color }) => {
+        const btn = document.createElement('button');
+        btn.className = `status-btn px-3 py-1 rounded-lg text-white text-sm font-medium ${color}`;
+        btn.textContent = label;
+        btn.dataset.status = value;
+        
+        if (currentStatus === value) {
+          btn.style.opacity = '1';
+          btn.style.transform = 'scale(1.05)';
+        } else {
+          btn.style.opacity = '0.5';
+        }
 
-      // Create Sick button
-      const sickBtn = document.createElement('button');
-      sickBtn.className = 'status-btn px-3 py-1 rounded-lg text-white text-sm font-medium bg-red-500';
-      sickBtn.textContent = 'ป่วย';
-      sickBtn.dataset.status = STATUS_SICK;
-      if (currentStatus === STATUS_SICK) {
-        sickBtn.style.opacity = '1';
-        sickBtn.style.transform = 'scale(1.05)';
-      } else {
-        sickBtn.style.opacity = '0.5';
-      }
+        btn.addEventListener('click', () => {
+          if (record) {
+            // Update existing record
+            record.status = value;
+          } else {
+            // Create new record for this date
+            const newRecord = {
+              id: generateId(),
+              student_name: studentName,
+              classroom: currentClassroom,
+              date: currentDate,
+              status: value,
+              created_at: new Date().toISOString()
+            };
+            allRecords.push(newRecord);
+          }
+          
+          saveToLocalStorage();
+          renderStudentList();
+          updateSummary();
+        });
+
+        buttonsDiv.appendChild(btn);
+      });
 
       // Create Delete button
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-btn px-3 py-1 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-red-500 hover:text-white transition-colors';
       deleteBtn.textContent = 'ลบ';
-
-      // Add event listeners for status buttons
-      [presentBtn, leaveBtn, sickBtn].forEach(btn => {
-        btn.addEventListener('click', async () => {
-          if (isLoading) return;
-
-          if (record) {
-            // Update existing record
-            isLoading = true;
-            btn.disabled = true;
-
-            const updatedRecord = { ...record, status: btn.dataset.status };
-            const result = await window.dataSdk.update(updatedRecord);
-
-            isLoading = false;
-            btn.disabled = false;
-
-            if (!result.isOk) {
-              showToast('ไม่สามารถอัพเดตข้อมูลได้', 'error');
-            }
-          } else {
-            // Check limit before creating
-            if (allRecords.length >= 999) {
-              showLimitModal();
-              return;
-            }
-
-            // Create new record for this date
-            isLoading = true;
-            btn.disabled = true;
-
-            const newRecord = {
-              student_name: studentName,
-              classroom: currentClassroom,
-              date: currentDate,
-              status: btn.dataset.status,
-              created_at: new Date().toISOString()
-            };
-
-            const result = await window.dataSdk.create(newRecord);
-
-            isLoading = false;
-            btn.disabled = false;
-
-            if (!result.isOk) {
-              showToast('ไม่สามารถบันทึกข้อมูลได้', 'error');
-            }
-          }
-        });
+      
+      deleteBtn.addEventListener('click', () => {
+        studentToDelete = studentName;
+        document.getElementById('delete-student-name').textContent = studentName;
+        document.getElementById('confirm-modal').style.display = 'flex';
       });
 
-      // Delete button event listener
-      deleteBtn.addEventListener('click', async () => {
-        if (isLoading) return;
-
-        // Find all records of this student in this classroom
-        const studentRecords = allRecords.filter(r => 
-          r.classroom === currentClassroom && r.student_name === studentName
-        );
-
-        if (studentRecords.length === 0) {
-          showToast('ไม่มีข้อมูลให้ลบ', 'error');
-          return;
-        }
-
-        isLoading = true;
-        deleteBtn.disabled = true;
-        const originalText = deleteBtn.textContent;
-        deleteBtn.textContent = 'กำลังลบ...';
-
-        let successCount = 0;
-        let errorCount = 0;
-
-        for (const record of studentRecords) {
-          const result = await window.dataSdk.delete(record);
-          if (result.isOk) {
-            successCount++;
-          } else {
-            errorCount++;
-          }
-        }
-
-        isLoading = false;
-        deleteBtn.disabled = false;
-        deleteBtn.textContent = originalText;
-
-        if (successCount > 0) {
-          showToast('ลบนักเรียนสำเร็จ', 'success');
-        }
-        
-        if (errorCount > 0) {
-          showToast(`เกิดข้อผิดพลาด ${errorCount} รายการ`, 'error');
-        }
-      });
-
-      buttonsDiv.appendChild(presentBtn);
-      buttonsDiv.appendChild(leaveBtn);
-      buttonsDiv.appendChild(sickBtn);
       buttonsDiv.appendChild(deleteBtn);
 
-      element.innerHTML = '';
-      element.appendChild(nameDiv);
-      element.appendChild(buttonsDiv);
+      div.appendChild(nameDiv);
+      div.appendChild(buttonsDiv);
+      
+      return div;
     }
 
     function updateSummary() {
@@ -725,12 +575,8 @@
       }, 3000);
     }
 
-    function showLimitModal() {
-      document.getElementById('limit-modal').style.display = 'flex';
-    }
-
     // Start the app
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7b5b30554cff7f',t:'MTc2NDY4NDA4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7b86f962c6fcf0',t:'MTc2NDY4NTg3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
