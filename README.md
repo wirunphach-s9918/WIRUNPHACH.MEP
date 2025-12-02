@@ -3,6 +3,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แอปเช็คชื่อนักเรียน</title>
+  <script src="/_sdk/data_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -62,18 +63,38 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
-  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body>
   <div class="app-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
    <div class="container mx-auto px-4 py-8" style="max-width: 1200px;"><!-- Welcome Screen -->
     <div id="welcome-screen" class="text-center">
-     <div class="bg-white rounded-3xl shadow-2xl p-12 mb-6 max-w-3xl mx-auto"><!-- School Logo -->
-      <div class="mb-6"><img src="http://www.pratoochai.ac.th/_files/webconfig/14100794_0_. .png" alt="ตราโรงเรียนประตูชัย" class="mx-auto" style="width: 120px; height: 120px; object-fit: contain;" onerror="this.style.display='none'; this.alt='ไม่สามารถโหลดตราโรงเรียนได้';">
-      </div><!-- Welcome Illustration -->
+     <div class="bg-white rounded-3xl shadow-2xl p-12 mb-6 max-w-3xl mx-auto"><!-- Welcome Illustration -->
       <div class="mb-8">
        <svg class="mx-auto" width="280" height="280" viewbox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg"><!-- Cloud decorations --> <ellipse cx="60" cy="70" rx="25" ry="18" fill="#E0F2FE" opacity="0.6" /> <ellipse cx="220" cy="60" rx="30" ry="20" fill="#FCE7F3" opacity="0.6" /> <ellipse cx="200" cy="200" rx="28" ry="19" fill="#E0F2FE" opacity="0.5" /> <!-- School building --> <rect x="80" y="140" width="120" height="90" rx="8" fill="#FCA5A5" /> <rect x="130" y="170" width="20" height="30" fill="#FEF3C7" /> <rect x="95" y="160" width="18" height="18" fill="#DBEAFE" /> <rect x="167" y="160" width="18" height="18" fill="#DBEAFE" /> <rect x="95" y="190" width="18" height="18" fill="#DBEAFE" /> <rect x="167" y="190" width="18" height="18" fill="#DBEAFE" /> <!-- Roof --> <path d="M 70 140 L 140 100 L 210 140" fill="#F472B6" stroke="#EC4899" stroke-width="3" /> <circle cx="140" cy="95" r="8" fill="#FDE047" /> <!-- Teacher figure --> <circle cx="140" cy="240" r="12" fill="#FBD5D5" /> <rect x="133" y="252" width="14" height="20" rx="3" fill="#FBCFE8" /> <!-- Stars decoration --> <text x="40" y="120" font-size="24" fill="#FCD34D">
          ⭐
@@ -84,8 +105,8 @@
         </text> <!-- Books --> <rect x="30" y="200" width="15" height="20" rx="2" fill="#FBCFE8" /> <rect x="240" y="190" width="15" height="25" rx="2" fill="#BFDBFE" />
        </svg>
       </div>
-      <h1 id="app-title" class="font-bold mb-4" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.3rem;">ระบบเช็คการมาเรียน นักเรียน MEP โรงเรียนประตูชัย<br>
-        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1</h1>
+      <h1 id="app-title" class="font-bold mb-2" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.125rem;">ระบบเช็คการมาเรียน นักเรียน MEP โรงเรียนประตูชัย</h1>
+      <p class="font-bold mb-6" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.125rem;">สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1</p>
       <div class="inline-block p-4 bg-pink-50 rounded-2xl mb-8">
        <p class="text-pink-600 font-medium">📚 กรุณาเลือกห้องเรียนเพื่อเริ่มเช็คชื่อ</p>
       </div><!-- Classroom Selection Grid -->
@@ -134,7 +155,15 @@
       <h1 class="text-3xl font-bold text-white mb-2">เช็คชื่อ <span id="current-classroom-title"></span></h1>
       <p id="buddhist-date-display" class="text-white text-opacity-90 text-lg font-medium"></p>
      </header><!-- Main Content -->
-     <main class="bg-white rounded-2xl shadow-2xl p-6 mb-6"><!-- Add Student Form -->
+     <main class="bg-white rounded-2xl shadow-2xl p-6 mb-6"><!-- Load Default Students Button (Only for ป.1/5) -->
+      <div id="load-default-section" style="display: none;" class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 mb-6 border-2 border-blue-200">
+       <div class="flex items-center justify-between">
+        <div>
+         <h3 class="text-lg font-bold text-gray-800 mb-1">🎯 โหลดรายชื่อเริ่มต้น ป.1/5</h3>
+         <p class="text-sm text-gray-600">เพิ่มนักเรียน 10 คนให้อัตโนมัติ (กดเพียงครั้งเดียว)</p>
+        </div><button id="load-default-btn" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-purple-600 transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"> โหลดรายชื่อ </button>
+       </div>
+      </div><!-- Add Student Form -->
       <div class="bg-purple-50 rounded-xl p-4 mb-6">
        <h2 class="text-xl font-bold text-gray-800 mb-4">เพิ่มนักเรียน</h2>
        <form id="add-student-form" class="flex flex-wrap gap-3">
@@ -149,7 +178,7 @@
       <div id="attendance-container">
        <h3 class="text-lg font-bold text-gray-800 mb-3">รายชื่อนักเรียน</h3>
        <div id="student-list" class="space-y-2">
-        <p class="text-gray-500 text-center py-8">ยังไม่มีนักเรียนในห้องเรียนนี้</p>
+        <p class="text-gray-500 text-center py-8">กำลังโหลดข้อมูล...</p>
        </div>
       </div><!-- Summary -->
       <div class="mt-6 p-4 bg-blue-50 rounded-xl">
@@ -179,43 +208,37 @@
      <p class="text-white text-opacity-60 text-sm mt-2">พัฒนาโดย นางวิรัลพัชษ์ สว่างเดือน</p>
     </footer>
    </div>
+  </div><!-- Limit Warning Modal -->
+  <div id="limit-modal" class="modal-overlay" style="display: none;">
+   <div class="modal-content">
+    <h2 class="text-xl font-bold text-red-600 mb-3">⚠️ เกินขด้จำกัด</h2>
+    <p class="text-gray-700 mb-4">ระบบสามารถเก็บข้อมูลได้สูงสุด 999 รายการ กรุณาลบข้อมูลเก่าก่อนเพิ่มใหม่</p><button id="close-limit-modal" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600"> ปิด </button>
+   </div>
   </div>
   <script>
-    // LocalStorage keys
-    const STORAGE_KEY = 'school_attendance_records';
-
     // Status constants
     const STATUS_PRESENT = 'present';
     const STATUS_LEAVE = 'leave';
     const STATUS_SICK = 'sick';
 
+    // Default students for ป.1/5
+    const DEFAULT_STUDENTS_P1_5 = [
+      'Tharathorn',
+      'Nirapad',
+      'Chaya',
+      'Naruwat',
+      'Narakorn',
+      'Phatthanaphol',
+      'Chayaphol',
+      'Ronnapee',
+      'Teesiriwut',
+      'Karnrawee'
+    ];
+
     let allRecords = [];
     let currentClassroom = "ป.1/5";
     let currentDate = new Date().toISOString().split('T')[0];
-
-    // LocalStorage functions
-    function loadFromLocalStorage() {
-      try {
-        const data = localStorage.getItem(STORAGE_KEY);
-        return data ? JSON.parse(data) : [];
-      } catch (e) {
-        console.error('Error loading data:', e);
-        return [];
-      }
-    }
-
-    function saveToLocalStorage(records) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-      } catch (e) {
-        console.error('Error saving data:', e);
-        showToast('ไม่สามารถบันทึกข้อมูลได้', 'error');
-      }
-    }
-
-    function generateId() {
-      return Date.now().toString(36) + Math.random().toString(36).substr(2);
-    }
+    let isLoading = false;
 
     // Helper function to convert date to Buddhist Era display
     function toBuddhistYear(dateStr) {
@@ -235,9 +258,29 @@
       }
     }
 
+    // Data SDK Handler
+    const dataHandler = {
+      onDataChanged(data) {
+        allRecords = data;
+        renderStudentList();
+        updateSummary();
+      }
+    };
+
     // Initialize app
-    function initializeApp() {
-      allRecords = loadFromLocalStorage();
+    async function initializeApp() {
+      if (!window.dataSdk) {
+        showToast('ไม่สามารถเชื่อมต่อระบบได้', 'error');
+        return;
+      }
+
+      const initResult = await window.dataSdk.init(dataHandler);
+      
+      if (!initResult.isOk) {
+        showToast('ไม่สามารถเริ่มต้นระบบได้', 'error');
+        return;
+      }
+
       setupEventListeners();
       document.getElementById('date-filter').value = currentDate;
       updateDateDisplay();
@@ -258,14 +301,28 @@
         showWelcomeScreen();
       });
 
+      // Load default students button
+      document.getElementById('load-default-btn').addEventListener('click', async () => {
+        await loadDefaultStudents();
+      });
+
       // Add student form
-      document.getElementById('add-student-form').addEventListener('submit', (e) => {
+      document.getElementById('add-student-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        if (isLoading) return;
+
         const nameInput = document.getElementById('student-name-input');
+        const addBtn = document.getElementById('add-student-btn');
         const studentName = nameInput.value.trim();
         
         if (!studentName) return;
+
+        // Check limit before adding
+        if (allRecords.length >= 999) {
+          showLimitModal();
+          return;
+        }
 
         // Check if student already exists in this classroom
         const existingStudent = allRecords.find(r => 
@@ -277,9 +334,14 @@
           return;
         }
 
+        // Show loading state
+        isLoading = true;
+        addBtn.disabled = true;
+        const originalText = addBtn.textContent;
+        addBtn.innerHTML = 'กำลังเพิ่ม...<span class="loading-spinner"></span>';
+
         // Add new student
         const newRecord = {
-          id: generateId(),
           student_name: studentName,
           classroom: currentClassroom,
           date: currentDate,
@@ -287,14 +349,19 @@
           created_at: new Date().toISOString()
         };
 
-        allRecords.push(newRecord);
-        saveToLocalStorage(allRecords);
-        
-        nameInput.value = '';
-        showToast('เพิ่มนักเรียนสำเร็จ', 'success');
-        
-        renderStudentList();
-        updateSummary();
+        const result = await window.dataSdk.create(newRecord);
+
+        // Reset loading state
+        isLoading = false;
+        addBtn.disabled = false;
+        addBtn.textContent = originalText;
+
+        if (result.isOk) {
+          nameInput.value = '';
+          showToast('เพิ่มนักเรียนสำเร็จ', 'success');
+        } else {
+          showToast('ไม่สามารถเพิ่มนักเรียนได้', 'error');
+        }
       });
 
       // Date filter
@@ -312,6 +379,74 @@
         updateSummary();
         updateDateDisplay();
       });
+
+      // Limit modal close
+      document.getElementById('close-limit-modal').addEventListener('click', () => {
+        document.getElementById('limit-modal').style.display = 'none';
+      });
+    }
+
+    async function loadDefaultStudents() {
+      if (isLoading) return;
+
+      const loadBtn = document.getElementById('load-default-btn');
+      
+      // Check if students already exist
+      const existingStudents = allRecords.filter(r => r.classroom === currentClassroom);
+      const existingNames = new Set(existingStudents.map(r => r.student_name));
+      
+      const studentsToAdd = DEFAULT_STUDENTS_P1_5.filter(name => !existingNames.has(name));
+
+      if (studentsToAdd.length === 0) {
+        showToast('รายชื่อถูกโหลดไว้แล้ว', 'error');
+        return;
+      }
+
+      // Check limit
+      if (allRecords.length + studentsToAdd.length > 999) {
+        showLimitModal();
+        return;
+      }
+
+      // Show loading state
+      isLoading = true;
+      loadBtn.disabled = true;
+      const originalText = loadBtn.textContent;
+      loadBtn.innerHTML = 'กำลังโหลด...<span class="loading-spinner"></span>';
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const studentName of studentsToAdd) {
+        const newRecord = {
+          student_name: studentName,
+          classroom: currentClassroom,
+          date: currentDate,
+          status: STATUS_PRESENT,
+          created_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.create(newRecord);
+        
+        if (result.isOk) {
+          successCount++;
+        } else {
+          errorCount++;
+        }
+      }
+
+      // Reset loading state
+      isLoading = false;
+      loadBtn.disabled = false;
+      loadBtn.textContent = originalText;
+
+      if (successCount > 0) {
+        showToast(`โหลดรายชื่อสำเร็จ ${successCount} คน`, 'success');
+      }
+      
+      if (errorCount > 0) {
+        showToast(`เกิดข้อผิดพลาด ${errorCount} รายการ`, 'error');
+      }
     }
 
     function showWelcomeScreen() {
@@ -323,6 +458,15 @@
       document.getElementById('welcome-screen').style.display = 'none';
       document.getElementById('attendance-screen').style.display = 'block';
       document.getElementById('current-classroom-title').textContent = currentClassroom;
+      
+      // Show load default button only for ป.1/5
+      const loadDefaultSection = document.getElementById('load-default-section');
+      if (currentClassroom === 'ป.1/5') {
+        loadDefaultSection.style.display = 'block';
+      } else {
+        loadDefaultSection.style.display = 'none';
+      }
+      
       updateDateDisplay();
       renderStudentList();
       updateSummary();
@@ -348,25 +492,38 @@
         return;
       }
 
-      container.innerHTML = '';
+      // Update existing elements or create new ones
+      const existingElements = new Map();
+      Array.from(container.children).forEach(el => {
+        if (el.dataset.studentName) {
+          existingElements.set(el.dataset.studentName, el);
+        }
+      });
 
       uniqueStudents.forEach(studentName => {
-        // Find record for this student on current date
         const todayRecord = allRecords.find(r => 
           r.classroom === currentClassroom && 
           r.student_name === studentName && 
           r.date === currentDate
         );
 
-        container.appendChild(createStudentElement(studentName, todayRecord));
+        if (existingElements.has(studentName)) {
+          updateStudentElement(existingElements.get(studentName), studentName, todayRecord);
+          existingElements.delete(studentName);
+        } else {
+          container.appendChild(createStudentElement(studentName, todayRecord));
+        }
       });
+
+      // Remove elements that no longer exist
+      existingElements.forEach(el => el.remove());
     }
 
     function createStudentElement(studentName, record) {
       const div = document.createElement('div');
       div.dataset.studentName = studentName;
       if (record) {
-        div.dataset.recordId = record.id;
+        div.dataset.recordId = record.__backendId;
       }
       div.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors';
       
@@ -430,49 +587,95 @@
 
       // Add event listeners for status buttons
       [presentBtn, leaveBtn, sickBtn].forEach(btn => {
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', async () => {
+          if (isLoading) return;
+
           if (record) {
             // Update existing record
-            const recordIndex = allRecords.findIndex(r => r.id === record.id);
-            if (recordIndex !== -1) {
-              allRecords[recordIndex].status = btn.dataset.status;
-              saveToLocalStorage(allRecords);
-              renderStudentList();
-              updateSummary();
+            isLoading = true;
+            btn.disabled = true;
+
+            const updatedRecord = { ...record, status: btn.dataset.status };
+            const result = await window.dataSdk.update(updatedRecord);
+
+            isLoading = false;
+            btn.disabled = false;
+
+            if (!result.isOk) {
+              showToast('ไม่สามารถอัพเดตข้อมูลได้', 'error');
             }
           } else {
+            // Check limit before creating
+            if (allRecords.length >= 999) {
+              showLimitModal();
+              return;
+            }
+
             // Create new record for this date
+            isLoading = true;
+            btn.disabled = true;
+
             const newRecord = {
-              id: generateId(),
               student_name: studentName,
               classroom: currentClassroom,
               date: currentDate,
               status: btn.dataset.status,
               created_at: new Date().toISOString()
             };
-            allRecords.push(newRecord);
-            saveToLocalStorage(allRecords);
-            renderStudentList();
-            updateSummary();
+
+            const result = await window.dataSdk.create(newRecord);
+
+            isLoading = false;
+            btn.disabled = false;
+
+            if (!result.isOk) {
+              showToast('ไม่สามารถบันทึกข้อมูลได้', 'error');
+            }
           }
         });
       });
 
       // Delete button event listener
-      deleteBtn.addEventListener('click', () => {
-        // Delete ALL records of this student in this classroom
-        const initialLength = allRecords.length;
-        allRecords = allRecords.filter(r => 
-          !(r.classroom === currentClassroom && r.student_name === studentName)
+      deleteBtn.addEventListener('click', async () => {
+        if (isLoading) return;
+
+        // Find all records of this student in this classroom
+        const studentRecords = allRecords.filter(r => 
+          r.classroom === currentClassroom && r.student_name === studentName
         );
-        
-        if (allRecords.length < initialLength) {
-          saveToLocalStorage(allRecords);
-          showToast('ลบนักเรียนสำเร็จ', 'success');
-          renderStudentList();
-          updateSummary();
-        } else {
+
+        if (studentRecords.length === 0) {
           showToast('ไม่มีข้อมูลให้ลบ', 'error');
+          return;
+        }
+
+        isLoading = true;
+        deleteBtn.disabled = true;
+        const originalText = deleteBtn.textContent;
+        deleteBtn.textContent = 'กำลังลบ...';
+
+        let successCount = 0;
+        let errorCount = 0;
+
+        for (const record of studentRecords) {
+          const result = await window.dataSdk.delete(record);
+          if (result.isOk) {
+            successCount++;
+          } else {
+            errorCount++;
+          }
+        }
+
+        isLoading = false;
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = originalText;
+
+        if (successCount > 0) {
+          showToast('ลบนักเรียนสำเร็จ', 'success');
+        }
+        
+        if (errorCount > 0) {
+          showToast(`เกิดข้อผิดพลาด ${errorCount} รายการ`, 'error');
         }
       });
 
@@ -522,8 +725,12 @@
       }, 3000);
     }
 
+    function showLimitModal() {
+      document.getElementById('limit-modal').style.display = 'flex';
+    }
+
     // Start the app
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7b03fed4778960',t:'MTc2NDY4MDUxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7b5b30554cff7f',t:'MTc2NDY4NDA4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
