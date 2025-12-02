@@ -84,7 +84,7 @@
         </text> <!-- Books --> <rect x="30" y="200" width="15" height="20" rx="2" fill="#FBCFE8" /> <rect x="240" y="190" width="15" height="25" rx="2" fill="#BFDBFE" />
        </svg>
       </div>
-      <h1 id="app-title" class="font-bold mb-4" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.3rem;">ระบบเช็คการมาเรียน นักเรียนสาย MEP โรงเรียนประตูชัย<br>
+      <h1 id="app-title" class="font-bold mb-4" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.6; font-size: 1.3rem;">ระบบเช็คการมาเรียน นักเรียน MEP โรงเรียนประตูชัย<br>
         สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1</h1>
       <div class="inline-block p-4 bg-pink-50 rounded-2xl mb-8">
        <p class="text-pink-600 font-medium">📚 กรุณาเลือกห้องเรียนเพื่อเริ่มเช็คชื่อ</p>
