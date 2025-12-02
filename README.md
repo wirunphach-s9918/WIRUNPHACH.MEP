@@ -55,4 +55,45 @@
       width: 20px;
       height: 20px;
       animation: spin 1s linear infinite;
-      display: inl
+      display: inline-block;
+      margin-left: 8px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container mx-auto px-4 py-8" style="max-width: 1200px;">
+      <!-- Welcome Screen -->
+      <div id="welcome-screen" class="text-center">
+        <div class="bg-white rounded-3xl shadow-2xl p-12 mb-6 max-w-3xl mx-auto">
+          <!-- Welcome Illustration -->
+          <div class="mb-8">
+            <svg class="mx-auto" width="280" height="280"
