@@ -3,8 +3,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>แอปเช็คชื่อนักเรียน</title>
-  <script src="/_sdk/data_sdk.js"></script>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -66,6 +64,8 @@
     }
   </style>
   <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body>
   <div class="app-wrapper" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
@@ -84,7 +84,7 @@
       </div>
       <h1 id="app-title" class="text-4xl font-bold mb-4" style="background: linear-gradient(135deg, #EC4899 0%, #8B5CF6 50%, #3B82F6 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1.4;">ระบบเช็คการมาเรียน<br>
         นักเรียนสาย MEP<br>
-        โรงเรียนประตูชัย<br><span style="font-size: 1.44rem;">สำนักงานเขตพื้นที่การศึกษาประถมศึกษาพระนครศรีอยุธยา เขต 1</span></h1>
+        โรงเรียนประตูชัย<br><span style="font-size: 1.44rem;">สำนักงานเขตพื้นที่การศึกษาประถมศึก�����าพระ��ครศรีอยุธยา เขต 1</span></h1>
       <div class="inline-block p-4 bg-pink-50 rounded-2xl mb-8">
        <p class="text-pink-600 font-medium">📚 กรุณาเลือกห้องเรียนเพื่อเริ่มเช็คชื่อ</p>
       </div><!-- Classroom Selection Grid -->
@@ -92,37 +92,37 @@
         <div class="text-5xl mb-2">
          🐠
         </div>
-        <div class="text-2xl font-bold text-pink-700">
+        <div class="text-xl font-bold text-pink-700">
          ป.1/5
         </div></button> <button class="classroom-select-btn group relative overflow-hidden bg-gradient-to-br from-blue-100 to-blue-200 hover:from-blue-200 hover:to-blue-300 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105" data-classroom="ป.2/5">
         <div class="text-5xl mb-2">
          🐻
         </div>
-        <div class="text-2xl font-bold text-blue-700">
+        <div class="text-xl font-bold text-blue-700">
          ป.2/5
         </div></button> <button class="classroom-select-btn group relative overflow-hidden bg-gradient-to-br from-purple-100 to-purple-200 hover:from-purple-200 hover:to-purple-300 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105" data-classroom="ป.3/5">
         <div class="text-5xl mb-2">
          🦊
         </div>
-        <div class="text-2xl font-bold text-purple-700">
+        <div class="text-xl font-bold text-purple-700">
          ป.3/5
         </div></button> <button class="classroom-select-btn group relative overflow-hidden bg-gradient-to-br from-pink-100 to-purple-200 hover:from-pink-200 hover:to-purple-300 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105" data-classroom="ป.4/5">
         <div class="text-5xl mb-2">
          🦁
         </div>
-        <div class="text-2xl font-bold text-pink-700">
+        <div class="text-xl font-bold text-pink-700">
          ป.4/5
         </div></button> <button class="classroom-select-btn group relative overflow-hidden bg-gradient-to-br from-blue-100 to-purple-200 hover:from-blue-200 hover:to-purple-300 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105" data-classroom="ป.5/5">
         <div class="text-5xl mb-2">
          🐰
         </div>
-        <div class="text-2xl font-bold text-blue-700">
+        <div class="text-xl font-bold text-blue-700">
          ป.5/5
         </div></button> <button class="classroom-select-btn group relative overflow-hidden bg-gradient-to-br from-purple-100 to-pink-200 hover:from-purple-200 hover:to-pink-300 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105" data-classroom="ป.6/5">
         <div class="text-5xl mb-2">
          🐯
         </div>
-        <div class="text-2xl font-bold text-purple-700">
+        <div class="text-xl font-bold text-purple-700">
          ป.6/5
         </div></button>
       </div>
@@ -180,67 +180,47 @@
    </div>
   </div>
   <script>
-    // Default config
-    const defaultConfig = {
-      app_title: "ระบบเช็คชื่อนักเรียน",
-      footer_text: "จัดการการมาเรียนอย่างมีประสิทธิภาพ",
-      primary_color: "#667eea",
-      surface_color: "#ffffff",
-      text_color: "#1f2937",
-      action_color: "#7c3aed",
-      secondary_action_color: "#6366f1"
-    };
-
-    let allRecords = [];
-    let currentClassroom = "ป.1/5";
-    let currentDate = new Date().toISOString().split('T')[0];
+    // LocalStorage keys
+    const STORAGE_KEY = 'school_attendance_records';
 
     // Status constants
     const STATUS_PRESENT = 'present';
     const STATUS_LEAVE = 'leave';
     const STATUS_SICK = 'sick';
 
-    // Data SDK handler
-    const dataHandler = {
-      onDataChanged(data) {
-        allRecords = data;
-        renderStudentList();
-        updateSummary();
-      }
-    };
+    let allRecords = [];
+    let currentClassroom = "ป.1/5";
+    let currentDate = new Date().toISOString().split('T')[0];
 
-    // Element SDK config change handler
-    async function onConfigChange(config) {
-      const appTitle = config.app_title || defaultConfig.app_title;
-      const footerText = config.footer_text || defaultConfig.footer_text;
-      const primaryColor = config.primary_color || defaultConfig.primary_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const actionColor = config.action_color || defaultConfig.action_color;
-      const secondaryActionColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+    // LocalStorage functions
+    function loadFromLocalStorage() {
+      try {
+        const data = localStorage.getItem(STORAGE_KEY);
+        return data ? JSON.parse(data) : [];
+      } catch (e) {
+        console.error('Error loading data:', e);
+        return [];
+      }
+    }
 
-      document.getElementById('footer-text').textContent = footerText;
-      
-      const wrapper = document.querySelector('.app-wrapper');
-      wrapper.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${actionColor} 100%)`;
-      
-      const mainContent = document.querySelector('main');
-      if (mainContent) {
-        mainContent.style.backgroundColor = surfaceColor;
-        mainContent.style.color = textColor;
+    function saveToLocalStorage(records) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      } catch (e) {
+        console.error('Error saving data:', e);
+        showToast('ไม่สามารถบันทึกข้อมูลได้', 'error');
       }
-      
-      const addBtn = document.getElementById('add-student-btn');
-      if (addBtn) {
-        addBtn.style.backgroundColor = actionColor;
-      }
+    }
+
+    function generateId() {
+      return Date.now().toString(36) + Math.random().toString(36).substr(2);
     }
 
     // Helper function to convert date to Buddhist Era display
     function toBuddhistYear(dateStr) {
       const date = new Date(dateStr);
       const buddhistYear = date.getFullYear() + 543;
-      const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
+      const thaiMonths = ['มกราคม', 'กุม��าพันธ์', '��ีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 
                           'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
       const day = date.getDate();
       const month = thaiMonths[date.getMonth()];
@@ -254,67 +234,9 @@
       }
     }
 
-    // Initialize SDKs
-    async function initializeApp() {
-      const dataResult = await window.dataSdk.init(dataHandler);
-      if (!dataResult.isOk) {
-        showToast('ไม่สามารถเริ่มต้นระบบได้', 'error');
-        return;
-      }
-
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange,
-          mapToCapabilities: (config) => ({
-            recolorables: [
-              {
-                get: () => config.primary_color || defaultConfig.primary_color,
-                set: (value) => {
-                  config.primary_color = value;
-                  window.elementSdk.setConfig({ primary_color: value });
-                }
-              },
-              {
-                get: () => config.surface_color || defaultConfig.surface_color,
-                set: (value) => {
-                  config.surface_color = value;
-                  window.elementSdk.setConfig({ surface_color: value });
-                }
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (value) => {
-                  config.text_color = value;
-                  window.elementSdk.setConfig({ text_color: value });
-                }
-              },
-              {
-                get: () => config.action_color || defaultConfig.action_color,
-                set: (value) => {
-                  config.action_color = value;
-                  window.elementSdk.setConfig({ action_color: value });
-                }
-              },
-              {
-                get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-                set: (value) => {
-                  config.secondary_action_color = value;
-                  window.elementSdk.setConfig({ secondary_action_color: value });
-                }
-              }
-            ],
-            borderables: [],
-            fontEditable: undefined,
-            fontSizeable: undefined
-          }),
-          mapToEditPanelValues: (config) => new Map([
-            ["app_title", config.app_title || defaultConfig.app_title],
-            ["footer_text", config.footer_text || defaultConfig.footer_text]
-          ])
-        });
-      }
-
+    // Initialize app
+    function initializeApp() {
+      allRecords = loadFromLocalStorage();
       setupEventListeners();
       document.getElementById('date-filter').value = currentDate;
       updateDateDisplay();
@@ -322,7 +244,7 @@
     }
 
     function setupEventListeners() {
-      // Classroom selection buttons (on welcome screen)
+      // Classroom selection buttons
       document.querySelectorAll('.classroom-select-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentClassroom = btn.dataset.classroom;
@@ -336,14 +258,9 @@
       });
 
       // Add student form
-      document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+      document.getElementById('add-student-form').addEventListener('submit', (e) => {
         e.preventDefault();
         
-        if (allRecords.length >= 999) {
-          showToast('ถึงขีดจำกัด 999 รายการแล้ว กรุณาลบข้อมูลเก่าก่อน', 'error');
-          return;
-        }
-
         const nameInput = document.getElementById('student-name-input');
         const studentName = nameInput.value.trim();
         
@@ -359,28 +276,24 @@
           return;
         }
 
-        const addBtn = document.getElementById('add-student-btn');
-        const originalText = addBtn.textContent;
-        addBtn.disabled = true;
-        addBtn.innerHTML = 'กำลังเพิ่ม... <span class="loading-spinner"></span>';
-
-        const result = await window.dataSdk.create({
+        // Add new student
+        const newRecord = {
+          id: generateId(),
           student_name: studentName,
           classroom: currentClassroom,
           date: currentDate,
           status: STATUS_PRESENT,
           created_at: new Date().toISOString()
-        });
+        };
 
-        addBtn.disabled = false;
-        addBtn.innerHTML = originalText;
-
-        if (result.isOk) {
-          nameInput.value = '';
-          showToast('เพิ่มนักเรียนสำเร็จ', 'success');
-        } else {
-          showToast('ไม่สามารถเพิ่มนักเรียนได้', 'error');
-        }
+        allRecords.push(newRecord);
+        saveToLocalStorage(allRecords);
+        
+        nameInput.value = '';
+        showToast('เพิ่มนักเรียนสำเร็จ', 'success');
+        
+        renderStudentList();
+        updateSummary();
       });
 
       // Date filter
@@ -417,7 +330,7 @@
     function renderStudentList() {
       const container = document.getElementById('student-list');
       
-      // Get all unique students in this classroom (from any date)
+      // Get all unique students in this classroom
       const studentsMap = new Map();
       allRecords.forEach(r => {
         if (r.classroom === currentClassroom) {
@@ -452,7 +365,7 @@
       const div = document.createElement('div');
       div.dataset.studentName = studentName;
       if (record) {
-        div.dataset.recordId = record.__backendId;
+        div.dataset.recordId = record.id;
       }
       div.className = 'flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors';
       
@@ -514,75 +427,51 @@
       deleteBtn.className = 'delete-btn px-3 py-1 bg-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-red-500 hover:text-white transition-colors';
       deleteBtn.textContent = 'ลบ';
 
-      // Add event listeners
+      // Add event listeners for status buttons
       [presentBtn, leaveBtn, sickBtn].forEach(btn => {
-        btn.addEventListener('click', async () => {
-          btn.disabled = true;
-          
+        btn.addEventListener('click', () => {
           if (record) {
             // Update existing record
-            const result = await window.dataSdk.update({
-              ...record,
-              status: btn.dataset.status
-            });
-            btn.disabled = false;
-            
-            if (!result.isOk) {
-              showToast('ไม่สามารถอัพเดทสถานะได้', 'error');
+            const recordIndex = allRecords.findIndex(r => r.id === record.id);
+            if (recordIndex !== -1) {
+              allRecords[recordIndex].status = btn.dataset.status;
+              saveToLocalStorage(allRecords);
+              renderStudentList();
+              updateSummary();
             }
           } else {
             // Create new record for this date
-            if (allRecords.length >= 999) {
-              showToast('ถึงขีดจำกัด 999 รายการแล้ว', 'error');
-              btn.disabled = false;
-              return;
-            }
-
-            const result = await window.dataSdk.create({
+            const newRecord = {
+              id: generateId(),
               student_name: studentName,
               classroom: currentClassroom,
               date: currentDate,
               status: btn.dataset.status,
               created_at: new Date().toISOString()
-            });
-            btn.disabled = false;
-            
-            if (!result.isOk) {
-              showToast('ไม่สามารถบันทึกสถานะได้', 'error');
-            }
+            };
+            allRecords.push(newRecord);
+            saveToLocalStorage(allRecords);
+            renderStudentList();
+            updateSummary();
           }
         });
       });
 
-      deleteBtn.addEventListener('click', async () => {
+      // Delete button event listener
+      deleteBtn.addEventListener('click', () => {
         // Delete ALL records of this student in this classroom
-        const studentRecords = allRecords.filter(r => 
-          r.classroom === currentClassroom && r.student_name === studentName
+        const initialLength = allRecords.length;
+        allRecords = allRecords.filter(r => 
+          !(r.classroom === currentClassroom && r.student_name === studentName)
         );
-
-        if (studentRecords.length === 0) {
-          showToast('ไม่มีข้อมูลให้ลบ', 'error');
-          return;
-        }
-
-        deleteBtn.disabled = true;
-        deleteBtn.textContent = 'กำลังลบ...';
         
-        let allDeleted = true;
-        for (const rec of studentRecords) {
-          const result = await window.dataSdk.delete(rec);
-          if (!result.isOk) {
-            allDeleted = false;
-          }
-        }
-        
-        deleteBtn.disabled = false;
-        deleteBtn.textContent = 'ลบ';
-        
-        if (allDeleted) {
+        if (allRecords.length < initialLength) {
+          saveToLocalStorage(allRecords);
           showToast('ลบนักเรียนสำเร็จ', 'success');
+          renderStudentList();
+          updateSummary();
         } else {
-          showToast('ไม่สามารถลบบางรายการได้', 'error');
+          showToast('ไม่มีข้อมูลให้ลบ', 'error');
         }
       });
 
@@ -632,7 +521,8 @@
       }, 3000);
     }
 
+    // Start the app
     initializeApp();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7ab839e4c04f5d',t:'MTc2NDY3NzQxMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a7adcab22698963',t:'MTc2NDY3ODkwNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
